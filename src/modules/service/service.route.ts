@@ -10,8 +10,8 @@ import { auth } from "../../middlewares/auth";
 const router = express.Router();
 
 router.get(
-  "/", 
-  validateQuery(paginationQuerySchema), 
+  "/",
+  validateQuery(paginationQuerySchema),
   ServiceControllers.getAllServices
 );
 
@@ -22,8 +22,8 @@ router.get(
 );
 
 router.get(
-  "/:id", 
-  validateParams(idParamValidationSchema), 
+  "/:id",
+  validateParams(idParamValidationSchema),
   ServiceControllers.getServiceById
 );
 
