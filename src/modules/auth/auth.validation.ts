@@ -16,6 +16,9 @@ const loginSchema = z.object({
     }),
 });
 
+export type TRegisterPayload = z.infer<typeof registerSchema>["body"];
+export type TLoginPayload = z.infer<typeof loginSchema>["body"];
+
 export const AuthValidation = {
     registerSchema,
     loginSchema,
