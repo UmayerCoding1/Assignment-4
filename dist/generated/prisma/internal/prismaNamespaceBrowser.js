@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.UserScalarFieldEnum = exports.TechnicianProfileScalarFieldEnum = exports.ServiceScalarFieldEnum = exports.ReviewScalarFieldEnum = exports.PaymentScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.BookingScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -75,6 +75,12 @@ exports.JsonNull = runtime.JsonNull;
  */
 exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
+    Booking: 'Booking',
+    Category: 'Category',
+    Payment: 'Payment',
+    Review: 'Review',
+    Service: 'Service',
+    TechnicianProfile: 'TechnicianProfile',
     User: 'User'
 };
 /*
@@ -86,16 +92,92 @@ exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
 });
+exports.BookingScalarFieldEnum = {
+    id: 'id',
+    customerId: 'customerId',
+    technicianId: 'technicianId',
+    serviceId: 'serviceId',
+    bookingDate: 'bookingDate',
+    note: 'note',
+    totalPrice: 'totalPrice',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.CategoryScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.PaymentScalarFieldEnum = {
+    id: 'id',
+    bookingId: 'bookingId',
+    userId: 'userId',
+    amount: 'amount',
+    provider: 'provider',
+    transactionId: 'transactionId',
+    status: 'status',
+    paidAt: 'paidAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.ReviewScalarFieldEnum = {
+    id: 'id',
+    customerId: 'customerId',
+    technicianId: 'technicianId',
+    bookingId: 'bookingId',
+    rating: 'rating',
+    comment: 'comment',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.ServiceScalarFieldEnum = {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    price: 'price',
+    duration: 'duration',
+    isAvailable: 'isAvailable',
+    categoryId: 'categoryId',
+    technicianId: 'technicianId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.TechnicianProfileScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    bio: 'bio',
+    experience: 'experience',
+    hourlyRate: 'hourlyRate',
+    location: 'location',
+    averageRating: 'averageRating',
+    totalReviews: 'totalReviews',
+    completedJobs: 'completedJobs',
+    availability: 'availability',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
 exports.UserScalarFieldEnum = {
     id: 'id',
-    email: 'email',
     name: 'name',
+    email: 'email',
+    password: 'password',
+    phone: 'phone',
+    address: 'address',
+    role: 'role',
+    status: 'status',
+    image: 'image',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
 exports.SortOrder = {
     asc: 'asc',
     desc: 'desc'
+};
+exports.NullableJsonNullValueInput = {
+    DbNull: exports.DbNull,
+    JsonNull: exports.JsonNull
 };
 exports.QueryMode = {
     default: 'default',
@@ -104,4 +186,9 @@ exports.QueryMode = {
 exports.NullsOrder = {
     first: 'first',
     last: 'last'
+};
+exports.JsonNullValueFilter = {
+    DbNull: exports.DbNull,
+    JsonNull: exports.JsonNull,
+    AnyNull: exports.AnyNull
 };
