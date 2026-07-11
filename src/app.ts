@@ -5,6 +5,7 @@ import config from './config';
 import authRouter from './modules/auth/auth.route';
 import { notFound } from './middlewares/notFound';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
+import categoryRouter from './modules/category/category.route';
 
 const app: Application = express();
 
@@ -22,6 +23,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/api/auth/', authRouter);
+app.use('/api/categories/', categoryRouter);
 
 app.use(notFound);
 app.use(globalErrorHandler);
