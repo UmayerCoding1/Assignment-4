@@ -4,8 +4,8 @@ import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 
 
-const getAllCategoriesAdmin = catchAsync(async (req: Request, res: Response) => {
-    const categories = await CategoryServices.getAllCategoriesAdmin();
+const getAllCategories = catchAsync(async (req: Request, res: Response) => {
+    const categories = await CategoryServices.getAllCategories();
 
     return sendResponse(res, {
         statusCode: 200,
@@ -58,7 +58,7 @@ const deleteCategory = catchAsync(
 
 export const CategoryControllers = {
     createCategory,
-    getAllCategoriesAdmin,
+    getAllCategories,
     updateCategory,
     deleteCategory,
 };

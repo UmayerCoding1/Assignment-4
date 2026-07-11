@@ -10,9 +10,8 @@ const categoryRouter = express.Router();
 
 categoryRouter.get(
     "/",
-    auth("ADMIN"),
     validateQuery(paginationQuerySchema),
-    CategoryControllers.getAllCategoriesAdmin,
+    CategoryControllers.getAllCategories,
 );
 
 categoryRouter.post(

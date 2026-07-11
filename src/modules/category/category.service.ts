@@ -5,7 +5,7 @@ import type {
     TUpdateCategoryPayload,
 } from "./category.validation";
 
-const getAllCategoriesAdmin = async () => {
+const getAllCategories = async () => {
     const result = await prisma.category.findMany({
         include: { _count: { select: { services: true } } },
         orderBy: { createdAt: "desc" },
@@ -86,7 +86,7 @@ const deleteCategory = async (categoryId: string) => {
 };
 
 export const CategoryServices = {
-    getAllCategoriesAdmin,
+    getAllCategories,
     createCategory,
     updateCategory,
     deleteCategory,

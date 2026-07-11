@@ -22,8 +22,21 @@ app.get('/', (req: Request, res: Response) => {
   res.send('FixItNow Server Running')
 });
 
+import { ServiceRoutes } from './modules/service/service.route';
+import { TechnicianRoutes } from './modules/technician/technician.route';
+import { BookingRoutes } from './modules/booking/booking.route';
+import { PaymentRoutes } from './modules/payment/payment.route';
+import { ReviewRoutes } from './modules/review/review.route';
+import { AdminRoutes } from './modules/admin/admin.route';
+
 app.use('/api/auth/', authRouter);
 app.use('/api/categories/', categoryRouter);
+app.use('/api/services/', ServiceRoutes);
+app.use('/api/', TechnicianRoutes);
+app.use('/api/', BookingRoutes);
+app.use('/api/', PaymentRoutes);
+app.use('/api/', ReviewRoutes);
+app.use('/api/', AdminRoutes);
 
 app.use(notFound);
 app.use(globalErrorHandler);
