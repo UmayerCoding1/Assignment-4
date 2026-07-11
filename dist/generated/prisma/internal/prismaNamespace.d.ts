@@ -179,9 +179,9 @@ type _Record<K extends keyof any, T> = {
 type NoExpand<T> = T extends unknown ? T : never;
 export type AtLeast<O extends object, K extends string> = NoExpand<O extends unknown ? (K extends keyof O ? {
     [P in K]: O[P];
-} & O : O) | ({
+} & O : O) | {
     [P in keyof O as P extends K ? P : never]-?: O[P];
-} & O) : never>;
+} & O : never>;
 type _Strict<U, _U = U> = U extends unknown ? U & OptionalFlat<_Record<Exclude<Keys<_U>, keyof U>, never>> : never;
 export type Strict<U extends object> = ComputeRaw<_Strict<U>>;
 /** End Helper Types for "Merge" **/
@@ -271,10 +271,10 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
  * Enums
  */
 export declare const TransactionIsolationLevel: {
-    readonly ReadUncommitted: 'ReadUncommitted';
-    readonly ReadCommitted: 'ReadCommitted';
-    readonly RepeatableRead: 'RepeatableRead';
-    readonly Serializable: 'Serializable';
+    readonly ReadUncommitted: "ReadUncommitted";
+    readonly ReadCommitted: "ReadCommitted";
+    readonly RepeatableRead: "RepeatableRead";
+    readonly Serializable: "Serializable";
 };
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel];
 /**

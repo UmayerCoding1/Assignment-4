@@ -28,10 +28,10 @@ export declare const AnyNull: import("@prisma/client-runtime-utils").AnyNullClas
 export declare const ModelName: {};
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
-    readonly ReadUncommitted: 'ReadUncommitted';
-    readonly ReadCommitted: 'ReadCommitted';
-    readonly RepeatableRead: 'RepeatableRead';
-    readonly Serializable: 'Serializable';
+    readonly ReadUncommitted: "ReadUncommitted";
+    readonly ReadCommitted: "ReadCommitted";
+    readonly RepeatableRead: "RepeatableRead";
+    readonly Serializable: "Serializable";
 };
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel];
 //# sourceMappingURL=prismaNamespaceBrowser.d.ts.map
