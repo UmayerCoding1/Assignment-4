@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "TechnicianProfile" ALTER COLUMN "experience" DROP NOT NULL,
+ALTER COLUMN "hourlyRate" DROP NOT NULL,
+ALTER COLUMN "location" DROP NOT NULL,
+ALTER COLUMN "averageRating" DROP NOT NULL,
+ALTER COLUMN "totalReviews" DROP NOT NULL,
+ALTER COLUMN "completedJobs" DROP NOT NULL;

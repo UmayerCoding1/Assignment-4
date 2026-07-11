@@ -10,11 +10,9 @@ import { TLoginPayload, TRegisterPayload } from "./auth.validation";
 
 export const registerUserService = async (payload: TRegisterPayload) => {
 
-
     const isUserExist = await prisma.user.findUnique({
         where: { email: payload.email }
     });
-
 
     if (isUserExist) {
         throw new AppError(409, "User already exists");
@@ -22,23 +20,34 @@ export const registerUserService = async (payload: TRegisterPayload) => {
 
     const hashedPassword = await bcrypt.hash(payload.password, config.hash_salt);
 
-    const user = await prisma.user.create({
-        data: {
-            ...payload,
-            password: hashedPassword,
-        },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-            role: true,
-            createdAt: true,
-        },
+    const user = await prisma.$transaction(async (tx) => {
+        const newUser = await tx.user.create({
+            data: {
+                ...payload,
+                password: hashedPassword,
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                role: true,
+                createdAt: true,
+            },
+        });
+
+        if (newUser.role === Role.TECHNICIAN) {
+            await tx.technicianProfile.create({
+                data: {
+                    userId: newUser.id,
+                },
+            });
+        }
+
+        return newUser;
     });
 
-
-    return user
+    return user;
 };
 
 export const loginUserService = async (payload: TLoginPayload) => {
