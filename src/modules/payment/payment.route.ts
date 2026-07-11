@@ -2,33 +2,35 @@ import express from "express";
 import { PaymentControllers } from "./payment.controller";
 import { PaymentValidations } from "./payment.validation";
 import validateRequest from "../../middlewares/validateRequest";
+import validateParams from "../../middlewares/validateParams";
+import { idParamValidationSchema, paginationQuerySchema } from "../../validations";
 import { auth } from "../../middlewares/auth";
+import validateQuery from "../../middlewares/validateQuery";
 
 const router = express.Router();
 
+
 router.post(
-  "/payments/create",
+  "/checkout",
   auth("CUSTOMER"),
-  validateRequest(PaymentValidations.createPaymentSchema),
-  PaymentControllers.createPayment
+  validateRequest(PaymentValidations.createCheckoutSessionValidationSchema),
+  PaymentControllers.createCheckoutSession,
 );
 
-router.post(
-  "/payments/confirm",
-  validateRequest(PaymentValidations.confirmPaymentSchema),
-  PaymentControllers.confirmPayment
-);
 
 router.get(
-  "/payments",
+  "/",
   auth("CUSTOMER", "ADMIN"),
-  PaymentControllers.getMyPayments
+  validateQuery(paginationQuerySchema),
+  PaymentControllers.getUserPaymentHistory,
 );
 
+
 router.get(
-  "/payments/:id",
+  "/:id",
   auth("CUSTOMER", "ADMIN"),
-  PaymentControllers.getPaymentById
+  validateParams(idParamValidationSchema),
+  PaymentControllers.getPaymentById,
 );
 
 export const PaymentRoutes = router;

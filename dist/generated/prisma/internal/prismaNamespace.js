@@ -142,14 +142,15 @@ exports.CategoryScalarFieldEnum = {
 exports.PaymentScalarFieldEnum = {
     id: 'id',
     bookingId: 'bookingId',
-    userId: 'userId',
     amount: 'amount',
-    provider: 'provider',
     transactionId: 'transactionId',
+    provider: 'provider',
     status: 'status',
+    stripeCheckoutSessionId: 'stripeCheckoutSessionId',
     paidAt: 'paidAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    userId: 'userId'
 };
 exports.ReviewScalarFieldEnum = {
     id: 'id',

@@ -35,5 +35,6 @@ exports.PaymentProvider = {
 exports.PaymentStatus = {
     PENDING: 'PENDING',
     SUCCESS: 'SUCCESS',
-    FAILED: 'FAILED'
+    FAILED: 'FAILED',
+    REFUNDED: 'REFUNDED'
 };

@@ -6,13 +6,19 @@ import authRouter from './modules/auth/auth.route';
 import { notFound } from './middlewares/notFound';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 import categoryRouter from './modules/category/category.route';
-
+import { PaymentControllers } from './modules/payment/payment.controller';
 const app: Application = express();
 
 app.use(cors({
   origin: config.app_url,
   credentials: true
 }));
+
+app.use(
+  "/api/payments/webhook",
+  express.raw({ type: "application/json" }),
+  PaymentControllers.stripeWebhook,
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +34,7 @@ import { BookingRoutes } from './modules/booking/booking.route';
 import { PaymentRoutes } from './modules/payment/payment.route';
 import { ReviewRoutes } from './modules/review/review.route';
 import { AdminRoutes } from './modules/admin/admin.route';
+
 
 app.use('/api/auth/', authRouter);
 app.use('/api/categories/', categoryRouter);

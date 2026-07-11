@@ -1,15 +1,19 @@
 import { z } from "zod";
 
-const createPaymentSchema = z.object({
-  bookingId: z.string(),
-  provider: z.enum(["STRIPE", "SSLCOMMERZ"]),
+const createCheckoutSessionValidationSchema = z.object({
+  body: z
+    .object({
+      bookingId: z
+        .string({ message: "Booking ID is required" })
+        .uuid({ message: "Invalid Booking ID format" }),
+    })
+    .strict(),
 });
 
-const confirmPaymentSchema = z.object({
-  transactionId: z.string(),
-});
+export type TCreateCheckoutSessionPayload = z.infer<
+  typeof createCheckoutSessionValidationSchema
+>["body"];
 
 export const PaymentValidations = {
-  createPaymentSchema,
-  confirmPaymentSchema,
+  createCheckoutSessionValidationSchema,
 };
