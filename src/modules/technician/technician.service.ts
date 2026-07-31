@@ -35,6 +35,12 @@ const getAllTechnicians = async (query: any) => {
             services: true,
           },
         },
+        category: {
+          select: {
+            title: true,
+            id: true
+          }
+        }
       },
     }),
     prisma.technicianProfile.count({ where }),
@@ -66,10 +72,17 @@ const getTechnicianProfile = async (id: string) => {
               customer: {
                 select: { name: true, image: true },
               },
+
             },
           },
         },
       },
+      category: {
+        select: {
+          title: true,
+          id: true
+        }
+      }
     },
   });
 

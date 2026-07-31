@@ -11,4 +11,5 @@ model Category {
     updatedAt DateTime @updatedAt
 
     services Service[]
+    bookings Booking[]
 }

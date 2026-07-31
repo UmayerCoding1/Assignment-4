@@ -2,25 +2,29 @@ import { prisma } from "../../lib/prisma";
 import AppError from "../../utils/AppError";
 
 const createBooking = async (customerId: string, payload: any) => {
-  const service = await prisma.service.findUnique({
-    where: { id: payload.serviceId },
-  });
 
-  if (!service) {
-    throw new AppError(404, "Service not found");
+  const categoty = await prisma.category.findUnique({
+    where: { id: payload.categoryId },
+  });
+  console.log(categoty)
+
+  if (!categoty) {
+    throw new AppError(404, "Categoty not found");
   }
 
   const result = await prisma.booking.create({
     data: {
       customerId,
       technicianId: payload.technicianId,
-      serviceId: payload.serviceId,
+      categoryId: payload.categoryId,
       bookingDate: new Date(payload.bookingDate),
-      note: payload.note,
-      totalPrice: service.price,
+      issue: payload.issue,
+      workDuration: payload.workDuration,
+      totalAmount: payload.totalAmount
+
     },
     include: {
-      service: true,
+      category: true,
       technician: {
         select: { name: true, email: true },
       },
@@ -41,7 +45,7 @@ const getMyBookings = async (userId: string, role: string) => {
   const result = await prisma.booking.findMany({
     where,
     include: {
-      service: true,
+      category: true,
       technician: { select: { name: true, email: true, phone: true } },
       customer: { select: { name: true, email: true, phone: true } },
     },
@@ -55,11 +59,10 @@ const getBookingById = async (id: string, userId: string, role: string) => {
   const booking = await prisma.booking.findUnique({
     where: { id },
     include: {
-      service: true,
+      category: true,
       technician: { select: { name: true, email: true, phone: true } },
       customer: { select: { name: true, email: true, phone: true } },
       payment: true,
-      review: true,
     },
   });
 

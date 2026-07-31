@@ -6,7 +6,6 @@ model Payment {
 
     amount        Float
     transactionId String        @unique
-    provider      String
     status        PaymentStatus @default(PENDING)
 
     stripeCheckoutSessionId String?
