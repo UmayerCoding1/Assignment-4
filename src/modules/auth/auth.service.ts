@@ -41,6 +41,7 @@ export const registerUserService = async (payload: TRegisterPayload) => {
             await tx.technicianProfile.create({
                 data: {
                     userId: newUser.id,
+                    ...payload
                 },
             });
         }

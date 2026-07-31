@@ -3,12 +3,15 @@ model TechnicianProfile {
     userId        String           @unique
     bio           String?
     experience    Int?
+    categoryId    String?
+    category      Category?        @relation(fields: [categoryId], references: [id])
     hourlyRate    Float?
     location      String?
     averageRating Float?           @default(0)
     totalReviews  Int?             @default(0)
     completedJobs Int?             @default(0)
     availability  Json?
+    skills        String[]
     status        TechnicianStatus @default(AVAILABLE)
     createdAt     DateTime         @default(now())
     updatedAt     DateTime         @updatedAt

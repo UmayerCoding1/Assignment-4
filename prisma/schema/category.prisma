@@ -1,10 +1,11 @@
 model Category {
-    id            String  @id @default(cuid())
+    id            String              @id @default(cuid())
     title         String?
-    slug          String? @unique
+    slug          String?             @unique
     description   String?
     image         String?
     startingPrice Float?
+    technicians   TechnicianProfile[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
