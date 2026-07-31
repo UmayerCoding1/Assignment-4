@@ -12,4 +12,7 @@ authRouter.post("/login", validateRequest(AuthValidation.loginSchema), authContr
 authRouter.get("/me", auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN), authControllers.getMyProfile);
 authRouter.post("/logout", auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN), authControllers.logoutUser);
 
+authRouter.post('/refresh-token', authControllers.refreshToken);
+
+
 export default authRouter;

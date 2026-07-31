@@ -11,6 +11,7 @@ model User {
     createdAt         DateTime           @default(now())
     updatedAt         DateTime           @updatedAt
     technicianProfile TechnicianProfile?
+    refreshToken      String?
     services          Service[]
 
     customerBookings   Booking[] @relation("CustomerBookings")

@@ -1,8 +1,15 @@
 import catchAsync from "../../utils/catchAsync";
 import { Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";
-import { getMyProfileService, loginUserService, registerUserService } from "./auth.service";
+import { getMyProfileService, loginUserService, refreshTokenService, registerUserService } from "./auth.service";
 import httpStatus from "http-status";
+import config from "../../config";
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: config.env === "production",
+    sameSite: config.env === "production" ? 'none' as const : 'lax' as const,
+}
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
     const result = await registerUserService(req.body);
@@ -18,16 +25,14 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     const { user, accessToken, refreshToken } = await loginUserService(req.body);
 
     res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "none",
-        maxAge: 1000 * 60 * 60 * 24
+        ...cookieOptions,
+        // maxAge: 1000 * 60 * 60 * 24
     });
 
+    console.log(cookieOptions)
+
     res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "none",
+        ...cookieOptions,
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 day
     });
 
@@ -50,6 +55,18 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+    const { newAccessToken, newRefreshToken, user } = await refreshTokenService(req);
+    res.cookie("accessToken", newAccessToken, cookieOptions);
+    res.cookie("refreshToken", newRefreshToken, cookieOptions)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Token refreshed successfully",
+        data: user,
+    });
+})
+
 const logoutUser = catchAsync(async (req: Request, res: Response) => {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
@@ -65,5 +82,6 @@ export const authControllers = {
     registerUser,
     loginUser,
     getMyProfile,
+    refreshToken,
     logoutUser
 }

@@ -6,17 +6,28 @@ import type {
 } from "./category.validation";
 
 const getAllCategories = async () => {
+
+
+    // const result = await prisma.$transaction([
+    //     prisma.service.deleteMany(),
+    //     prisma.category.deleteMany(),
+    // ]);
+
+
+
     const result = await prisma.category.findMany({
         include: { _count: { select: { services: true } } },
         orderBy: { createdAt: "desc" },
     });
+
+    // console.log(result)
 
     return result;
 };
 
 const createCategory = async (payload: TCreateCategoryPayload) => {
     const existing = await prisma.category.findFirst({
-        where: { name: payload.name },
+        where: { title: payload.title },
     });
 
     if (existing) {
@@ -42,9 +53,9 @@ const updateCategory = async (
         throw new AppError(404, "Category not found!");
     }
 
-    if (payload.name && payload.name !== category.name) {
+    if (payload.title && payload.title !== category.title) {
         const existing = await prisma.category.findFirst({
-            where: { name: payload.name },
+            where: { title: payload.title },
         });
 
         if (existing) {
