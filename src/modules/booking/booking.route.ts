@@ -24,4 +24,7 @@ router.get(
   BookingControllers.getBookingById
 );
 
+
+router.put('/booking/:id', auth('TECHNICIAN'), BookingControllers.updateBookingStatus);
+
 export const BookingRoutes = router;

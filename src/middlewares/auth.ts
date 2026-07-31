@@ -17,11 +17,13 @@ export const auth = (...requiredRoles: Role[]) => {
                 req.headers.authorization?.split(" ")[1]
                 : req.headers.authorization;
 
+        console.log('Token', token)
 
-        console.log(req.cookies)
         if (!token) {
             throw new Error("You are not logged in. Please log in to access this resource.");
         }
+
+        console.log('Token', token)
 
         const verifiedToken = jwtUtils.verifyToken(token, config.access_token_secret);
 
@@ -44,6 +46,8 @@ export const auth = (...requiredRoles: Role[]) => {
             }
         });
 
+        // console.log('user', user)
+
         if (!user) {
             throw new Error("User not found. Please log in again.");
         }
@@ -51,6 +55,8 @@ export const auth = (...requiredRoles: Role[]) => {
         if (user.status === "BLOCKED") {
             throw new Error("Your account has been blocked. Please contact support.");
         }
+
+        // console.log('user', user)
 
         req.user = {
             email,

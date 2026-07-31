@@ -41,7 +41,6 @@ export const registerUserService = async (payload: TRegisterPayload) => {
             await tx.technicianProfile.create({
                 data: {
                     userId: newUser.id,
-                    ...payload
                 },
             });
         }
@@ -93,6 +92,15 @@ export const loginUserService = async (payload: TLoginPayload) => {
         config.refresh_token_secret,
         config.refresh_token_expires_in as SignOptions
     );
+
+    await prisma.user.update({
+        where: {
+            id: user.id
+        },
+        data: {
+            refreshToken
+        }
+    });
 
 
     return {

@@ -1,3 +1,4 @@
+import { BookingStatus } from "../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import AppError from "../../utils/AppError";
 
@@ -48,6 +49,7 @@ const getMyBookings = async (userId: string, role: string) => {
       category: true,
       technician: { select: { name: true, email: true, phone: true } },
       customer: { select: { name: true, email: true, phone: true } },
+      payment: true
     },
     orderBy: { createdAt: "desc" },
   });
@@ -81,8 +83,20 @@ const getBookingById = async (id: string, userId: string, role: string) => {
   return booking;
 };
 
+
+
+const updateBookingStatus = async (id: string, status: BookingStatus) => {
+
+  const result = await prisma.booking.update({
+    where: { id },
+    data: { status: status },
+  });
+  return result;
+}
+
 export const BookingServices = {
   createBooking,
   getMyBookings,
   getBookingById,
+  updateBookingStatus,
 };
