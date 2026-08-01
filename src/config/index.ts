@@ -24,6 +24,12 @@ const config = {
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
   },
 
+  imagekit: {
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY!,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT!,
+  },
+
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
 };
 
