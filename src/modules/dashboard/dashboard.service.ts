@@ -5,34 +5,32 @@ const DashboardServices = {
     getAdminDashboardDataService: async (req: Request) => {
         const userId = req.user?.id;
 
-        const totalVolume = await prisma.payment.aggregate({
+        const totalAmount = await prisma.payment.aggregate({
             _sum: {
                 amount: true
             }
         });
+        const totalVolume = totalAmount._sum.amount || 0
 
-        const totalBooking = prisma.booking.count();
-        const totalUsers = prisma.user.count();
-        const totalActiveUsers = prisma.user.findMany({
+        const totalBooking = await prisma.booking.count();
+
+        const totalUsers = await prisma.user.count();
+        const totalActiveUsers = await prisma.user.count({
             where: {
                 status: 'ACTIVE'
             }
         });
-        const totalActiveTechnician = prisma.technicianProfile.findMany({
+        const totalActiveTechnician = await prisma.technicianProfile.count({
             where: {
                 status: 'AVAILABLE',
             }
         });
-        const totalBlockedUsers = prisma.user.findMany({
+        const totalBlockedUsers = await prisma.user.count({
             where: {
                 status: 'BLOCKED'
             }
         });
-        const totalBlockedTechnicians = prisma.technicianProfile.findMany({
-            where: {
-                status: 'UNAVAILABLE',
-            }
-        });
+        const totalTechnicians = await prisma.technicianProfile.count();
 
         return {
             totalVolume,
@@ -41,7 +39,7 @@ const DashboardServices = {
             totalActiveUsers,
             totalActiveTechnician,
             totalBlockedUsers,
-            totalBlockedTechnicians
+            totalTechnicians
         }
     }
 }
