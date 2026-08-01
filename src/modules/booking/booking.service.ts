@@ -86,11 +86,27 @@ const getBookingById = async (id: string, userId: string, role: string) => {
 
 
 const updateBookingStatus = async (id: string, status: BookingStatus) => {
-
   const result = await prisma.booking.update({
     where: { id },
     data: { status: status },
   });
+
+
+  if (!result) {
+    throw new AppError(404, "Booking not found");
+  }
+
+  if (status === 'COMPLETED') {
+    await prisma.technicianProfile.update({
+      where: { userId: result.technicianId },
+      data: {
+        completedJobs: { increment: 1 }
+      }
+    })
+
+  }
+
+
   return result;
 }
 
