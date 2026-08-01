@@ -117,7 +117,7 @@ const getPaymentById = async (paymentId: string, userId: string, role: string) =
     include: {
       booking: {
         include: {
-          service: true,
+          category: true,
           customer: { select: { name: true, email: true } },
         },
       },
@@ -163,7 +163,6 @@ const markBookingPaid = async (session: Stripe.Checkout.Session) => {
         bookingId,
         amount,
         transactionId: paymentIntentId ?? session.id,
-        provider: "STRIPE",
         status: "SUCCESS",
         stripeCheckoutSessionId: session.id,
         paidAt: new Date(),
@@ -171,7 +170,6 @@ const markBookingPaid = async (session: Stripe.Checkout.Session) => {
       update: {
         amount,
         transactionId: paymentIntentId ?? session.id,
-        provider: "STRIPE",
         status: "SUCCESS",
         stripeCheckoutSessionId: session.id,
         paidAt: new Date(),
