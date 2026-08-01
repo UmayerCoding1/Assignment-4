@@ -38,11 +38,20 @@ export const registerUserService = async (payload: TRegisterPayload) => {
         });
 
         if (newUser.role === Role.TECHNICIAN) {
-            await tx.technicianProfile.create({
+            const newTechnician = await tx.technicianProfile.create({
                 data: {
                     userId: newUser.id,
                 },
             });
+
+            await tx.user.update({
+                where: {
+                    id: newUser.id
+                },
+                data: {
+                    technicianProfile: { connect: { id: newTechnician.id } }
+                }
+            })
         }
 
         return newUser;
@@ -248,13 +257,16 @@ export const getTechnicianProfileService = async (userId: string) => {
                     image: true,
                     address: true
                 }
-            }
+            },
+            category: true
         }
     })
 
     if (!technicianProfile) {
         throw new AppError(404, "Technician profile not found");
     }
+
+    console.log(technicianProfile);
 
     return technicianProfile
 

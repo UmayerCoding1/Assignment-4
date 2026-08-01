@@ -23,7 +23,6 @@ const createCheckoutSession = catchAsync(async (req: Request, res: Response) => 
 });
 
 const getUserPaymentHistory = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.url);
   const result = await PaymentServices.getUserPaymentHistory(
     req.user!.id,
     req.user!.role

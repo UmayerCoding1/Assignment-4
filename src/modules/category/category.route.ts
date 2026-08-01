@@ -14,6 +14,8 @@ categoryRouter.get(
     CategoryControllers.getAllCategories,
 );
 
+categoryRouter.get('/:id', CategoryControllers.getCategoryById)
+
 categoryRouter.post(
     "/",
     auth("ADMIN"),

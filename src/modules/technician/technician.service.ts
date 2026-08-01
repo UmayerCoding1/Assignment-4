@@ -94,20 +94,34 @@ const getTechnicianProfile = async (id: string) => {
 };
 
 const updateProfile = async (userId: string, payload: any) => {
-  const existingProfile = await prisma.technicianProfile.findUnique({
-    where: { userId },
+  const { user, category, ...profileData } = payload;
+
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      phone: user.phone,
+      address: user.address,
+      image: user.image,
+    },
   });
 
-  if (!existingProfile) {
-    throw new AppError(404, "Technician profile not found");
-  }
-
-  const updatedProfile = await prisma.technicianProfile.update({
-    where: { userId },
-    data: payload,
+  const update = await prisma.technicianProfile.update({
+    where: {
+      userId,
+    },
+    data: {
+      ...profileData,
+      hourlyRate: profileData.hourlyRate
+        ? Number(profileData.hourlyRate)
+        : null,
+    },
   });
-
-  return updatedProfile;
+  return {
+    user: { ...user },
+    TechnicianProfile: { ...update },
+  };
 };
 
 const updateAvailability = async (userId: string, availability: any) => {
@@ -132,7 +146,7 @@ const getTechBookings = async (userId: string) => {
     where: { technicianId: userId },
     include: {
       customer: { select: { name: true, email: true, phone: true } },
-      service: { select: { title: true, price: true } },
+      category: { select: { title: true, startingPrice: true } },
     },
     orderBy: { createdAt: "desc" },
   });

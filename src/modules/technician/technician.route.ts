@@ -12,7 +12,7 @@ router.get("/technicians/:id", TechnicianControllers.getTechnicianProfile);
 router.put(
   "/technician/profile",
   auth("TECHNICIAN"),
-  validateRequest(TechnicianValidations.updateProfileSchema),
+  // validateRequest(TechnicianValidations.updateProfileSchema),
   TechnicianControllers.updateProfile
 );
 

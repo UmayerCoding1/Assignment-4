@@ -25,6 +25,20 @@ const getAllCategories = async () => {
     return result;
 };
 
+const getCategoryById = async (categoryId: string) => {
+    const result = await prisma.category.findFirst({
+        where: { id: categoryId },
+    });
+
+    console.log('result', result)
+
+    if (!result) {
+        throw new AppError(404, "Category not found!");
+    }
+
+    return result;
+}
+
 const createCategory = async (payload: TCreateCategoryPayload) => {
     const existing = await prisma.category.findFirst({
         where: { title: payload.title },
@@ -101,4 +115,5 @@ export const CategoryServices = {
     createCategory,
     updateCategory,
     deleteCategory,
+    getCategoryById
 };
