@@ -77,6 +77,17 @@ const updateTechBookingStatus = catchAsync(async (req: Request, res: Response) =
   });
 });
 
+const updateStatus = catchAsync(async (req: Request, res: Response) => {
+  const result = await TechnicianServices.updateStatusService(req.body.status, req.params.id as string);
+  console.log(result)
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Status updated successfully",
+    data: result.status,
+  });
+})
+
 export const TechnicianControllers = {
   getAllTechnicians,
   getTechnicianProfile,
@@ -84,4 +95,5 @@ export const TechnicianControllers = {
   updateAvailability,
   getTechBookings,
   updateTechBookingStatus,
+  updateStatus
 };

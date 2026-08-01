@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import AppError from "../../utils/AppError";
-import { Prisma } from "../../generated/prisma/client";
+import { Prisma, TechnicianStatus } from "../../generated/prisma/client";
 
 const getAllTechnicians = async (query: any) => {
   const page = Number(query.page) || 1;
@@ -185,6 +185,17 @@ const updateTechBookingStatus = async (userId: string, bookingId: string, status
   return updatedBooking;
 };
 
+
+const updateStatusService = async (status: TechnicianStatus, techId: string) => {
+
+  const result = await prisma.technicianProfile.update({
+    where: { userId: techId },
+    data: { status }
+  })
+
+  return result
+}
+
 export const TechnicianServices = {
   getAllTechnicians,
   getTechnicianProfile,
@@ -192,4 +203,5 @@ export const TechnicianServices = {
   updateAvailability,
   getTechBookings,
   updateTechBookingStatus,
+  updateStatusService
 };

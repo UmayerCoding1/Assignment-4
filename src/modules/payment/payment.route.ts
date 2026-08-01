@@ -34,5 +34,5 @@ router.get(
 );
 
 
-router.patch('/payment/success', auth('CUSTOMER'), PaymentControllers.createPaymentSuccess)
+router.patch('/success', auth('CUSTOMER'), PaymentControllers.createPaymentSuccess)
 export const PaymentRoutes = router;

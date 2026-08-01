@@ -36,4 +36,6 @@ router.patch(
   TechnicianControllers.updateTechBookingStatus
 );
 
+router.patch('/technician/update-status/:id', auth('TECHNICIAN'), TechnicianControllers.updateStatus)
+
 export const TechnicianRoutes = router;

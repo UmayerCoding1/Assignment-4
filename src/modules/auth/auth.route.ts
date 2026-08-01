@@ -21,8 +21,13 @@ authRouter.patch('/update-avatar', auth('ADMIN', 'CUSTOMER', 'TECHNICIAN'), auth
 
 authRouter.get('/state', async (req: Request, res: Response) => {
     try {
-        const userIds = await prisma.user.findMany({ where: { address: { not: null } }, select: { id: true } })
-        return res.status(200).json({ success: true, message: 'success', data: userIds })
+        // const userIds = await prisma.user.findMany({ where: { address: { not: null } }, select: { id: true } });
+        const notValidTechnician = await prisma.user.deleteMany({
+            where: {
+                address: null
+            }
+        })
+        return res.status(200).json({ success: true, message: 'success', data: notValidTechnician })
     } catch (error) {
         console.log(error)
     }
