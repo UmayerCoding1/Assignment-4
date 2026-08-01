@@ -16,11 +16,9 @@ app.use(cors({
 
 console.log(config.app_url)
 
-app.use(
-  "/api/payments/webhook",
-  express.raw({ type: "application/json" }),
-  PaymentControllers.stripeWebhook,
-);
+
+
+app.use('/api/v1/webhook', WebhookRoutes);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,6 +34,7 @@ import { BookingRoutes } from './modules/booking/booking.route';
 import { PaymentRoutes } from './modules/payment/payment.route';
 import { ReviewRoutes } from './modules/review/review.route';
 import { AdminRoutes } from './modules/admin/admin.route';
+import { WebhookRoutes } from './modules/Webhook/webhook.route';
 
 
 app.use('/api/auth/', authRouter);
@@ -43,7 +42,7 @@ app.use('/api/categories/', categoryRouter);
 app.use('/api/services/', ServiceRoutes);
 app.use('/api/', TechnicianRoutes);
 app.use('/api/', BookingRoutes);
-app.use('/api/', PaymentRoutes);
+app.use('/api/payment', PaymentRoutes);
 app.use('/api/', ReviewRoutes);
 app.use('/api/', AdminRoutes);
 

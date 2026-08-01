@@ -13,15 +13,15 @@ const router = express.Router();
 router.post(
   "/checkout",
   auth("CUSTOMER"),
-  validateRequest(PaymentValidations.createCheckoutSessionValidationSchema),
+  // validateRequest(PaymentValidations.createCheckoutSessionValidationSchema),
   PaymentControllers.createCheckoutSession,
 );
 
 
 router.get(
   "/",
-  auth("CUSTOMER", "ADMIN"),
-  validateQuery(paginationQuerySchema),
+  auth("CUSTOMER", 'TECHNICIAN'),
+  // validateQuery(paginationQuerySchema),
   PaymentControllers.getUserPaymentHistory,
 );
 
@@ -33,4 +33,6 @@ router.get(
   PaymentControllers.getPaymentById,
 );
 
+
+router.patch('/payment/success', auth('CUSTOMER'), PaymentControllers.createPaymentSuccess)
 export const PaymentRoutes = router;

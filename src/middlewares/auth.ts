@@ -17,13 +17,10 @@ export const auth = (...requiredRoles: Role[]) => {
                 req.headers.authorization?.split(" ")[1]
                 : req.headers.authorization;
 
-        console.log('Token', token)
 
         if (!token) {
             throw new Error("You are not logged in. Please log in to access this resource.");
         }
-
-        console.log('Token', token)
 
         const verifiedToken = jwtUtils.verifyToken(token, config.access_token_secret);
 
@@ -64,6 +61,8 @@ export const auth = (...requiredRoles: Role[]) => {
             id,
             role
         }
+
+
 
         next();
 

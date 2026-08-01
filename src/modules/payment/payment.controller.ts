@@ -11,8 +11,7 @@ import stripe from "../../lib/stripe";
 
 const createCheckoutSession = catchAsync(async (req: Request, res: Response) => {
   const result = await PaymentServices.createCheckoutSession(
-    req.body.bookingId,
-    req.user!.id
+    req,
   );
 
   sendResponse(res, {
@@ -24,6 +23,7 @@ const createCheckoutSession = catchAsync(async (req: Request, res: Response) => 
 });
 
 const getUserPaymentHistory = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.url);
   const result = await PaymentServices.getUserPaymentHistory(
     req.user!.id,
     req.user!.role
@@ -79,9 +79,25 @@ const stripeWebhook = async (req: Request, res: Response) => {
   }
 };
 
+
+const createPaymentSuccess = catchAsync(async (req: Request, res: Response) => {
+  console.log('req.body', req.body)
+  const result = await PaymentServices.handlePaymentSuccess(
+    req.body.bookingId,
+  );
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Payment success created successfully!",
+    data: result,
+  });
+});
+
 export const PaymentControllers = {
   createCheckoutSession,
   getUserPaymentHistory,
   getPaymentById,
   stripeWebhook,
+  createPaymentSuccess,
 };

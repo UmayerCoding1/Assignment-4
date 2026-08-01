@@ -4,91 +4,104 @@ import stripe from "../../lib/stripe";
 import config from "../../config";
 import type Stripe from "stripe";
 import { Prisma } from "../../generated/prisma/client";
+import { Request, Response } from "express";
+import { v4 as uuidv4 } from 'uuid';
 
 
-const createCheckoutSession = async (bookingId: string, userId: string) => {
-  const booking = await prisma.booking.findUnique({
-    where: { id: bookingId },
-    include: { service: true, payment: true },
-  });
 
-  if (!booking) {
-    throw new AppError(404, "Booking not found!");
-  }
+export const createCheckoutSession = async (req: Request) => {
+  try {
+    const { bookingId } = req.body;
 
-  if (booking.customerId !== userId) {
-    throw new AppError(403, "You are not authorized to pay for this booking!");
-  }
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { category: true, customer: true },
+    });
 
-  if (booking.status !== "ACCEPTED") {
-    throw new AppError(400, "Booking must be accepted before payment!");
-  }
+    if (!booking) {
+      throw new AppError(404, "Booking not found!");
+    }
 
-  if (booking.payment && booking.payment.status === "SUCCESS") {
-    throw new AppError(400, "This booking has already been paid!");
-  }
+    // Ensure duplicate payment na hoy
+    const existingPayment = await prisma.payment.findUnique({
+      where: { bookingId },
+    });
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: booking.service.title,
-            description: booking.service.description,
+    if (existingPayment && existingPayment.status === 'SUCCESS') {
+      throw new AppError(400, "Booking already paid!");
+    }
+
+    const transactionId = `TXN-${uuidv4()}`;
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: `${booking.category.title} Service`,
+              description: booking.issue,
+            },
+            unit_amount: Math.round(booking.totalAmount * 100),
           },
-          unit_amount: Math.round(booking.service.price * 100),
+          quantity: 1,
         },
-        quantity: 1,
+      ],
+      mode: 'payment',
+      success_url: `${process.env.FRONTEND_URL}/dashboard/my-bookings/success?booking_id=${bookingId}`,
+      cancel_url: `${process.env.FRONTEND_URL}/dashboard/my-bookings/cancel?booking_id=${bookingId}`,
+      metadata: {
+        bookingId,
+        transactionId,
       },
-    ],
-    success_url: `${config.frontendUrl}/payment/success?bookingId=${booking.id}`,
-    cancel_url: `${config.frontendUrl}/payment/cancel?bookingId=${booking.id}`,
-    metadata: {
-      bookingId: booking.id,
-      customerId: userId,
-    },
-  });
+    });
 
-  await prisma.payment.upsert({
-    where: { bookingId: booking.id },
-    create: {
-      bookingId: booking.id,
-      amount: booking.service.price,
-      transactionId: session.id,
-      provider: "STRIPE",
-      status: "PENDING",
-      stripeCheckoutSessionId: session.id,
-    },
-    update: {
-      amount: booking.service.price,
-      transactionId: session.id,
-      provider: "STRIPE",
-      status: "PENDING",
-      stripeCheckoutSessionId: session.id,
-      paidAt: null,
-    },
-  });
+    // Upsert - existing thakle update, na thakle create
+    const payment = await prisma.payment.upsert({
+      where: { bookingId },
+      update: {
+        stripeCheckoutSessionId: session.id,
+        transactionId,
+        amount: booking.totalAmount,
+        status: 'PENDING',
+      },
+      create: {
+        bookingId,
+        userId: booking.customerId,
+        amount: booking.totalAmount,
+        transactionId,
+        stripeCheckoutSessionId: session.id,
+        status: 'PENDING',
+      },
+    });
 
-  return { url: session.url, sessionId: session.id };
+    return { url: session.url, paymentId: payment.id };
+  } catch (error) {
+    console.error('Checkout session error:', error);
+    throw new AppError(400, "Failed to create checkout session");
+  }
 };
 
 const getUserPaymentHistory = async (userId: string, role: string) => {
   const where: Prisma.PaymentWhereInput = {};
-
+  console.log('this is my userId and role', userId, role)
   if (role === "CUSTOMER") {
     where.booking = { customerId: userId };
   }
+  if (role === "TECHNICIAN") {
+    where.booking = { technicianId: userId };
+  }
+  console.log('this is my where', where)
 
   const result = await prisma.payment.findMany({
     where,
     include: {
       booking: {
         include: {
-          service: true,
-          customer: { select: { name: true, email: true } },
+          category: true,
+          customer: { select: { name: true, email: true, id: true } },
+          technician: { select: { name: true, email: true, id: true } },
         },
       },
     },
@@ -234,9 +247,42 @@ const handleStripeEvent = async (event: Stripe.Event) => {
   }
 };
 
+// payment.service.ts e ei function ta ki ache?
+const handlePaymentSuccess = async (bookingId: string) => {
+  console.log('bookingId', bookingId)
+  await prisma.$transaction(async (tx) => {
+    await tx.payment.update({
+      where: { bookingId },
+      data: {
+        status: 'SUCCESS',
+        paidAt: new Date(),
+
+      },
+    });
+
+    await tx.booking.update({
+      where: { id: bookingId },
+      data: { status: 'PAID' },
+    });
+  });
+};
+
+
+
+const handlePaymentFailure = async (bookingId: string) => {
+  await prisma.payment
+    .update({
+      where: { bookingId },
+      data: { status: 'FAILED' },
+    })
+    .catch(() => { }); // payment record na thakle silently skip
+};
+
 export const PaymentServices = {
   createCheckoutSession,
   getUserPaymentHistory,
   getPaymentById,
   handleStripeEvent,
+  handlePaymentSuccess,
+  handlePaymentFailure,
 };
