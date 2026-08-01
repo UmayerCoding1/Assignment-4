@@ -36,6 +36,7 @@ import { ReviewRoutes } from './modules/review/review.route';
 import { AdminRoutes } from './modules/admin/admin.route';
 import { WebhookRoutes } from './modules/Webhook/webhook.route';
 import imagekitRouter from './modules/imagekit/imagekit.route';
+import dashboardRoute from './modules/dashboard/dashboard.route';
 
 
 app.use('/api/auth/', authRouter);
@@ -46,6 +47,7 @@ app.use('/api/', BookingRoutes);
 app.use('/api/payment', PaymentRoutes);
 app.use('/api/', ReviewRoutes);
 app.use('/api/', AdminRoutes);
+app.use('/api/dashboard', dashboardRoute)
 
 
 // imagekit route
