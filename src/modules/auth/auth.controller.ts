@@ -1,7 +1,7 @@
 import catchAsync from "../../utils/catchAsync";
 import { Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";
-import { getMyProfileService, getTechnicianProfileService, loginUserService, refreshTokenService, registerUserService } from "./auth.service";
+import { getMyProfileService, getTechnicianProfileService, loginUserService, refreshTokenService, registerUserService, updateAvatarService } from "./auth.service";
 import httpStatus from "http-status";
 import config from "../../config";
 
@@ -90,11 +90,22 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+
+const updateAvatar = catchAsync(async (req: Request, res: Response) => {
+    const result = await updateAvatarService(req.body, req.user?.id as string);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Avatar updated successfully",
+        data: result,
+    });
+})
 export const authControllers = {
     registerUser,
     loginUser,
     getMyProfile,
     refreshToken,
     logoutUser,
-    getTechnicianProfile
+    getTechnicianProfile,
+    updateAvatar
 }

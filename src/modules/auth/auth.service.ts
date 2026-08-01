@@ -271,3 +271,21 @@ export const getTechnicianProfileService = async (userId: string) => {
     return technicianProfile
 
 }
+
+
+export const updateAvatarService = async (payload: { imageUrl: string }, userId: string) => {
+    const result = await prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            image: payload.imageUrl
+        }
+    })
+
+    if (!result) {
+        throw new AppError(404, "Failed to upload avatar");
+    }
+
+    return result;
+}

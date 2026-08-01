@@ -16,6 +16,8 @@ authRouter.post("/logout", auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN), aut
 authRouter.post('/refresh-token', authControllers.refreshToken);
 authRouter.get("/technician/me", auth(Role.TECHNICIAN), authControllers.getTechnicianProfile)
 
+authRouter.patch('/update-avatar', auth('ADMIN', 'CUSTOMER', 'TECHNICIAN'), authControllers.updateAvatar);
+
 
 authRouter.get('/state', async (req: Request, res: Response) => {
     try {
