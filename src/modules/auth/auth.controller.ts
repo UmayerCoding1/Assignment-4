@@ -1,7 +1,7 @@
 import catchAsync from "../../utils/catchAsync";
 import { Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";
-import { getMyProfileService, loginUserService, refreshTokenService, registerUserService } from "./auth.service";
+import { getMyProfileService, getTechnicianProfileService, loginUserService, refreshTokenService, registerUserService } from "./auth.service";
 import httpStatus from "http-status";
 import config from "../../config";
 
@@ -65,6 +65,18 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
         message: "Token refreshed successfully",
         data: user,
     });
+});
+
+
+
+const getTechnicianProfile = catchAsync(async (req: Request, res: Response) => {
+    const result = await getTechnicianProfileService(req.user?.id as string);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Technician profile fetched successfully",
+        data: result,
+    });
 })
 
 const logoutUser = catchAsync(async (req: Request, res: Response) => {
@@ -83,5 +95,6 @@ export const authControllers = {
     loginUser,
     getMyProfile,
     refreshToken,
-    logoutUser
+    logoutUser,
+    getTechnicianProfile
 }

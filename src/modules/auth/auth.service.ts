@@ -220,3 +220,42 @@ export const refreshTokenService = async (req: Request) => {
         }
     }
 }
+
+export const getTechnicianProfileService = async (userId: string) => {
+    const userdata = await prisma.user.findFirst({
+        where: {
+            id: userId
+        }
+    });
+
+    if (!userdata) {
+        throw new AppError(404, "User not found");
+    }
+
+    const technicianProfile = await prisma.technicianProfile.findUnique({
+        where: {
+            userId
+        },
+        include: {
+            user: {
+                select: {
+                    name: true,
+                    email: true,
+                    phone: true,
+                    role: true,
+                    status: true,
+                    id: true,
+                    image: true,
+                    address: true
+                }
+            }
+        }
+    })
+
+    if (!technicianProfile) {
+        throw new AppError(404, "Technician profile not found");
+    }
+
+    return technicianProfile
+
+}
