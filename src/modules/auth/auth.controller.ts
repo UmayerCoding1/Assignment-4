@@ -6,10 +6,12 @@ import httpStatus from "http-status";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 
-const cookieOptions = {
+let cookieOptions;
+
+cookieOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: 'none' as const
+    sameSite: 'none' as const,
 }
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
@@ -25,17 +27,11 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 const loginUser = catchAsync(async (req: Request, res: Response) => {
     const { user, accessToken, refreshToken } = await loginUserService(req.body);
 
-    res.cookie("accessToken", accessToken, {
-        ...cookieOptions,
-        // maxAge: 1000 * 60 * 60 * 24
-    });
+    res.cookie("accessToken", accessToken, cookieOptions);
 
     console.log(cookieOptions)
 
-    res.cookie("refreshToken", refreshToken, {
-        ...cookieOptions,
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 day
-    });
+    res.cookie("refreshToken", refreshToken, cookieOptions);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

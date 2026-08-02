@@ -8,10 +8,11 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = require("../../utils/sendResponse");
 const auth_service_1 = require("./auth.service");
 const http_status_1 = __importDefault(require("http-status"));
-const cookieOptions = {
+let cookieOptions;
+cookieOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: 'none'
+    sameSite: 'none',
 };
 const registerUser = (0, catchAsync_1.default)(async (req, res) => {
     const result = await (0, auth_service_1.registerUserService)(req.body);
@@ -24,15 +25,9 @@ const registerUser = (0, catchAsync_1.default)(async (req, res) => {
 });
 const loginUser = (0, catchAsync_1.default)(async (req, res) => {
     const { user, accessToken, refreshToken } = await (0, auth_service_1.loginUserService)(req.body);
-    res.cookie("accessToken", accessToken, {
-        ...cookieOptions,
-        // maxAge: 1000 * 60 * 60 * 24
-    });
+    res.cookie("accessToken", accessToken, cookieOptions);
     console.log(cookieOptions);
-    res.cookie("refreshToken", refreshToken, {
-        ...cookieOptions,
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 day
-    });
+    res.cookie("refreshToken", refreshToken, cookieOptions);
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
