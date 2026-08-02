@@ -86,6 +86,34 @@ const DashboardServices = {
         const totalEarning = netEarnings._sum.amount || 0;
 
 
+        const reacentBooking = await prisma.booking.findMany({
+            where: {
+                technicianId: userId,
+                status: 'REQUESTED'
+            },
+            take: 5,
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                customer: {
+                    select: {
+                        name: true,
+                        email: true,
+                        id: true,
+                        role: true,
+                    }
+                },
+                category: {
+                    select: {
+                        title: true,
+                        id: true,
+                    }
+                },
+            }
+        });
+
+
         // const responseTime = await prisma.booking.aggregate({
         //     where: {
         //         technicianId: userId,
@@ -95,14 +123,17 @@ const DashboardServices = {
         //         responseTime: true
         //     }
         // })
-
-        return {
+        const response = {
             pendingJobs,
             activeJobs,
             completedJobs,
             canceledJobs,
-            totalEarning
+            totalEarning,
+            reacentBooking
         }
+
+        console.log("FINAL DASHBOARD RESPONSE:", response);
+        return response;
     }
 }
 
