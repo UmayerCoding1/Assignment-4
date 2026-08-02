@@ -5,6 +5,7 @@ import DashboardControllers from './dashboard.controller';
 const dashboardRoute = Router();
 
 dashboardRoute.get('/admin', auth('ADMIN'), DashboardControllers.getAdminDashboardData)
+dashboardRoute.get('/technician', auth('TECHNICIAN'), DashboardControllers.getTechnicianDashboardData);
 
 
 export default dashboardRoute;
