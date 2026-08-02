@@ -216,7 +216,7 @@ export const refreshTokenService = async (req: Request) => {
         role: user.role
     }, config.refresh_token_secret, config.refresh_token_expires_in as SignOptions)
 
-    const hashNewRefreshToken = await bcrypt.hash(newRefreshToken, config.hash_salt)
+    const hashNewRefreshToken = hashToken(newRefreshToken);
 
     await prisma.user.update({
         where: {

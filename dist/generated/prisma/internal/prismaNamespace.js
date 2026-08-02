@@ -124,18 +124,22 @@ exports.BookingScalarFieldEnum = {
     id: 'id',
     customerId: 'customerId',
     technicianId: 'technicianId',
-    serviceId: 'serviceId',
+    categoryId: 'categoryId',
     bookingDate: 'bookingDate',
-    note: 'note',
-    totalPrice: 'totalPrice',
+    issue: 'issue',
+    totalAmount: 'totalAmount',
+    workDuration: 'workDuration',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
 exports.CategoryScalarFieldEnum = {
     id: 'id',
-    name: 'name',
+    title: 'title',
+    slug: 'slug',
     description: 'description',
+    image: 'image',
+    startingPrice: 'startingPrice',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -144,7 +148,6 @@ exports.PaymentScalarFieldEnum = {
     bookingId: 'bookingId',
     amount: 'amount',
     transactionId: 'transactionId',
-    provider: 'provider',
     status: 'status',
     stripeCheckoutSessionId: 'stripeCheckoutSessionId',
     paidAt: 'paidAt',
@@ -179,12 +182,15 @@ exports.TechnicianProfileScalarFieldEnum = {
     userId: 'userId',
     bio: 'bio',
     experience: 'experience',
+    categoryId: 'categoryId',
     hourlyRate: 'hourlyRate',
     location: 'location',
     averageRating: 'averageRating',
     totalReviews: 'totalReviews',
     completedJobs: 'completedJobs',
     availability: 'availability',
+    skills: 'skills',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -199,7 +205,8 @@ exports.UserScalarFieldEnum = {
     status: 'status',
     image: 'image',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    refreshToken: 'refreshToken'
 };
 exports.SortOrder = {
     asc: 'asc',

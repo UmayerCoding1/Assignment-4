@@ -219,7 +219,7 @@ const getAllCategories = async (query: { sortBy?: string }) => {
   let orderBy: Prisma.CategoryOrderByWithRelationInput = { createdAt: "desc" };
 
   if (query.sortBy === "name") {
-    orderBy = { name: "asc" };
+    orderBy = { title: "asc" };
   } else if (query.sortBy === "createdAt") {
     orderBy = { createdAt: "desc" };
   }
