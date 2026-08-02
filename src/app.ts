@@ -10,7 +10,7 @@ import categoryRouter from './modules/category/category.route';
 const app: Application = express();
 
 app.use(cors({
-  origin: config.app_url,
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://fixit--now.vercel.app'],
   credentials: true
 }));
 
