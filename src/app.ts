@@ -6,7 +6,7 @@ import authRouter from './modules/auth/auth.route';
 import { notFound } from './middlewares/notFound';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 import categoryRouter from './modules/category/category.route';
-import { PaymentControllers } from './modules/payment/payment.controller';
+
 const app: Application = express();
 
 app.use(cors({
@@ -18,7 +18,7 @@ console.log(config.app_url)
 
 
 
-app.use('/api/v1/webhook', WebhookRoutes);
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
