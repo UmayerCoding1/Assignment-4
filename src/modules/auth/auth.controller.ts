@@ -8,8 +8,8 @@ import { prisma } from "../../lib/prisma";
 
 const cookieOptions = {
     httpOnly: true,
-    secure: config.env === "production",
-    sameSite: config.env === "production" ? 'none' as const : 'lax' as const,
+    secure: true,
+    sameSite: 'none' as const
 }
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {

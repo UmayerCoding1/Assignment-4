@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ServiceRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const service_controller_1 = require("./service.controller");
+const service_validation_1 = require("./service.validation");
+const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
+const validateParams_1 = __importDefault(require("../../middlewares/validateParams"));
+const validateQuery_1 = __importDefault(require("../../middlewares/validateQuery"));
+const validations_1 = require("../../validations");
+const auth_1 = require("../../middlewares/auth");
+const router = express_1.default.Router();
+router.get("/", (0, validateQuery_1.default)(validations_1.paginationQuerySchema), service_controller_1.ServiceControllers.getAllServices);
+router.get("/categories", (0, validateQuery_1.default)(validations_1.paginationQuerySchema), service_controller_1.ServiceControllers.getAllCategories);
+router.get("/:id", (0, validateParams_1.default)(validations_1.idParamValidationSchema), service_controller_1.ServiceControllers.getServiceById);
+router.post("/", (0, auth_1.auth)("TECHNICIAN"), (0, validateRequest_1.default)(service_validation_1.ServiceValidations.createServiceValidationSchema), service_controller_1.ServiceControllers.createService);
+router.patch("/:id", (0, auth_1.auth)("TECHNICIAN"), (0, validateParams_1.default)(validations_1.idParamValidationSchema), (0, validateRequest_1.default)(service_validation_1.ServiceValidations.updateServiceValidationSchema), service_controller_1.ServiceControllers.updateService);
+router.delete("/:id", (0, auth_1.auth)("TECHNICIAN"), (0, validateParams_1.default)(validations_1.idParamValidationSchema), service_controller_1.ServiceControllers.deleteService);
+exports.ServiceRoutes = router;
