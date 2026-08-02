@@ -7,6 +7,7 @@ import { jwtUtils } from "../../utils/jwt";
 import { SignOptions } from "jsonwebtoken";
 import { TLoginPayload, TRegisterPayload } from "./auth.validation";
 import { Request } from "express";
+import { hashToken } from "../../utils/hashToken";
 
 
 export const registerUserService = async (payload: TRegisterPayload) => {
@@ -102,12 +103,14 @@ export const loginUserService = async (payload: TLoginPayload) => {
         config.refresh_token_expires_in as SignOptions
     );
 
+    const hashRefreshToken = hashToken(refreshToken);
+
     await prisma.user.update({
         where: {
             id: user.id
         },
         data: {
-            refreshToken
+            refreshToken: hashRefreshToken
         }
     });
 
@@ -147,6 +150,7 @@ export const refreshTokenService = async (req: Request) => {
     let savedRefreshToken: string;
     try {
         const decodedToken = jwtUtils.verifyToken(refreshTokenFromCookie, config.refresh_token_secret);
+
         if (!decodedToken.success) {
             throw new AppError(401, decodedToken.error || "Invalid refresh token");
         }
@@ -161,17 +165,22 @@ export const refreshTokenService = async (req: Request) => {
             },
         });
 
+        console.log('pass')
+        console.log('user', user);
+        console.log('DB token', user?.refreshToken);
+
         if (!user || !user.refreshToken) {
             throw new AppError(404, "User not found or refresh token missing");
         }
         savedRefreshToken = user.refreshToken;
+        console.log('check', user?.refreshToken)
 
     } catch (error) {
         throw new AppError(401, "Invalid refresh token");
     }
 
-
-    const isRefreshTokenValid = await bcrypt.compare(refreshTokenFromCookie, savedRefreshToken)
+    const hashRefrashToken = hashToken(refreshTokenFromCookie);
+    const isRefreshTokenValid = savedRefreshToken === hashRefrashToken;
 
     if (!isRefreshTokenValid) {
         await prisma.user.update({

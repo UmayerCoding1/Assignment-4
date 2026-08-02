@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { getMyProfileService, getTechnicianProfileService, loginUserService, refreshTokenService, registerUserService, updateAvatarService } from "./auth.service";
 import httpStatus from "http-status";
 import config from "../../config";
+import { prisma } from "../../lib/prisma";
 
 const cookieOptions = {
     httpOnly: true,
@@ -82,6 +83,9 @@ const getTechnicianProfile = catchAsync(async (req: Request, res: Response) => {
 const logoutUser = catchAsync(async (req: Request, res: Response) => {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
+
+
+
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
