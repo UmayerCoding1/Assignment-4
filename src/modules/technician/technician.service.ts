@@ -4,15 +4,39 @@ import { Prisma, TechnicianStatus } from "../../generated/prisma/client";
 
 const getAllTechnicians = async (query: any) => {
   const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 10;
+  const limit = Number(query.limit) || 1;
   const skip = (page - 1) * limit;
-
+  console.log(query)
   const where: Prisma.TechnicianProfileWhereInput = {};
 
   if (query.location) {
     where.location = { contains: query.location, mode: "insensitive" };
   }
 
+  if (query.categoryFilter) {
+    where.categoryId = query.categoryFilter
+  }
+
+  if (query.search) {
+    where.OR = [
+      {
+        user: {
+          name: {
+            contains: query.search,
+            mode: "insensitive",
+          },
+        },
+      },
+      {
+        category: {
+          title: {
+            contains: query.search,
+            mode: "insensitive",
+          },
+        },
+      },
+    ];
+  }
   if (query.rating) {
     where.averageRating = { gte: parseFloat(query.rating) };
   }
@@ -94,36 +118,7 @@ const getTechnicianProfile = async (id: string) => {
 };
 
 
-const getTechnicianByCategoryIdService = async (catId: string) => {
-  const page = 1;
-  const limit = 5
-  const skip = (page - 1) * limit;
 
-  const technicians = await prisma.technicianProfile.findMany({
-    where: {
-      categoryId: catId,
-    },
-    skip,
-    take: limit,
-    include: {
-      user: {
-        select: {
-          name: true,
-          email: true,
-          image: true,
-          services: true,
-        },
-      },
-      category: {
-        select: {
-          title: true,
-          id: true
-        }
-      }
-    },
-  })
-  return technicians;
-}
 
 const updateProfile = async (userId: string, payload: any) => {
   const { user, category, ...profileData } = payload;
@@ -231,7 +226,7 @@ const updateStatusService = async (status: TechnicianStatus, techId: string) => 
 export const TechnicianServices = {
   getAllTechnicians,
   getTechnicianProfile,
-  getTechnicianByCategoryIdService,
+
   updateProfile,
   updateAvailability,
   getTechBookings,

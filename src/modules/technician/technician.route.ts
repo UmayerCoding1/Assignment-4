@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get("/technicians", TechnicianControllers.getAllTechnicians);
 router.get("/technicians/:id", TechnicianControllers.getTechnicianProfile);
-router.get('/technicians/category/:catId', TechnicianControllers.getTechnicianByCategoryId)
+
 
 router.put(
   "/technician/profile",

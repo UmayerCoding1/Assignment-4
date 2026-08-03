@@ -26,17 +26,7 @@ const getTechnicianProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getTechnicianByCategoryId = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.params.catId);
-  const result = await TechnicianServices.getTechnicianByCategoryIdService(req.params.catId as string);
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Technicians retrieved successfully",
-    data: result,
-  });
-})
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const result = await TechnicianServices.updateProfile(req.user!.id, req.body);
@@ -103,7 +93,6 @@ const updateStatus = catchAsync(async (req: Request, res: Response) => {
 export const TechnicianControllers = {
   getAllTechnicians,
   getTechnicianProfile,
-  getTechnicianByCategoryId,
   updateProfile,
   updateAvailability,
   getTechBookings,
