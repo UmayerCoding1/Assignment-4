@@ -132,7 +132,66 @@ const DashboardServices = {
             reacentBooking
         }
 
-        console.log("FINAL DASHBOARD RESPONSE:", response);
+
+        return response;
+    },
+
+    getCustomerDashboardDataService: async (userId: string) => {
+        const totalBooking = await prisma.booking.count({
+            where: {
+                customerId: userId,
+            }
+        });
+
+        const activeJobs = await prisma.booking.count({
+            where: {
+                customerId: userId,
+                status: { in: ['REQUESTED', 'ACCEPTED', 'IN_PROGRESS'] }
+            }
+        });
+
+        const inProgressJobs = await prisma.booking.count({
+            where: {
+                customerId: userId,
+                status: 'IN_PROGRESS'
+            }
+        });
+
+        const completedJobs = await prisma.booking.count({
+            where: {
+                customerId: userId,
+                status: 'COMPLETED'
+            }
+        });
+
+        const canceledJobs = await prisma.booking.count({
+            where: {
+                customerId: userId,
+                status: 'CANCELLED'
+            }
+        });
+
+        const totalSpent = await prisma.payment.aggregate({
+            where: {
+                booking: {
+                    customerId: userId,
+                    status: { in: ['PAID', 'COMPLETED', 'IN_PROGRESS'] }
+                }
+            },
+            _sum: {
+                amount: true
+            }
+        });
+
+        const response = {
+            totalBooking,
+            activeJobs,
+            inProgressJobs,
+            completedJobs,
+            canceledJobs,
+            totalSpent: totalSpent._sum.amount || 0
+        }
+
         return response;
     }
 }

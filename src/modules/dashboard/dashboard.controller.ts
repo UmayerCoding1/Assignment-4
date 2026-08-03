@@ -21,6 +21,15 @@ const DashboardControllers = {
             message: "Technician dashboard data retrieved successfully",
             data: result,
         });
+    }),
+    getCustomerDashboardData: catchAsync(async (req: Request, res: Response) => {
+        const result = await DashboardServices.getCustomerDashboardDataService(req.user?.id as string);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Customer dashboard data retrieved successfully",
+            data: result,
+        });
     })
 }
 
