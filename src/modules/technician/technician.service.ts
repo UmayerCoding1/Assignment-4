@@ -93,6 +93,38 @@ const getTechnicianProfile = async (id: string) => {
   return data;
 };
 
+
+const getTechnicianByCategoryIdService = async (catId: string) => {
+  const page = 1;
+  const limit = 5
+  const skip = (page - 1) * limit;
+
+  const technicians = await prisma.technicianProfile.findMany({
+    where: {
+      categoryId: catId,
+    },
+    skip,
+    take: limit,
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+          image: true,
+          services: true,
+        },
+      },
+      category: {
+        select: {
+          title: true,
+          id: true
+        }
+      }
+    },
+  })
+  return technicians;
+}
+
 const updateProfile = async (userId: string, payload: any) => {
   const { user, category, ...profileData } = payload;
 
@@ -199,6 +231,7 @@ const updateStatusService = async (status: TechnicianStatus, techId: string) => 
 export const TechnicianServices = {
   getAllTechnicians,
   getTechnicianProfile,
+  getTechnicianByCategoryIdService,
   updateProfile,
   updateAvailability,
   getTechBookings,

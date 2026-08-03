@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get("/technicians", TechnicianControllers.getAllTechnicians);
 router.get("/technicians/:id", TechnicianControllers.getTechnicianProfile);
+router.get('/technicians/category/:catId', TechnicianControllers.getTechnicianByCategoryId)
 
 router.put(
   "/technician/profile",
@@ -36,6 +37,7 @@ router.patch(
   TechnicianControllers.updateTechBookingStatus
 );
 
-router.patch('/technician/update-status/:id', auth('TECHNICIAN'), TechnicianControllers.updateStatus)
+router.patch('/technician/update-status/:id', auth('TECHNICIAN'), TechnicianControllers.updateStatus);
+
 
 export const TechnicianRoutes = router;
