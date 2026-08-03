@@ -110,9 +110,23 @@ const updateBookingStatus = async (id: string, status: BookingStatus) => {
   return result;
 }
 
+const deleteBookingService = async (id: string) => {
+  console.log(id);
+  const result = await prisma.booking.delete({
+    where: { id },
+  });
+
+  if (!result) {
+    throw new AppError(404, "Booking not found");
+  }
+
+  return result;
+}
+
 export const BookingServices = {
   createBooking,
   getMyBookings,
   getBookingById,
   updateBookingStatus,
+  deleteBookingService
 };

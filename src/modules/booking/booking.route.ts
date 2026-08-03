@@ -24,6 +24,12 @@ router.get(
   BookingControllers.getBookingById
 );
 
+router.delete(
+  "/bookings/:id",
+  auth("CUSTOMER", 'ADMIN'),
+  BookingControllers.deleteBooking
+);
+
 
 router.put('/booking/:id', auth('TECHNICIAN'), BookingControllers.updateBookingStatus);
 
