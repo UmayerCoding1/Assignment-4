@@ -8,11 +8,17 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = require("../../utils/sendResponse");
 const auth_service_1 = require("./auth.service");
 const http_status_1 = __importDefault(require("http-status"));
+const config_1 = __importDefault(require("../../config"));
 let cookieOptions;
+// cookieOptions = {
+//     httpOnly: true,
+//     secure: true,
+//     sameSite: 'none' as const,
+// }
 cookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none',
+    secure: config_1.default.env === 'development' ? false : true,
+    sameSite: config_1.default.env === 'development' ? 'lax' : 'none',
 };
 const registerUser = (0, catchAsync_1.default)(async (req, res) => {
     const result = await (0, auth_service_1.registerUserService)(req.body);
@@ -83,6 +89,15 @@ const updateAvatar = (0, catchAsync_1.default)(async (req, res) => {
         data: result,
     });
 });
+const updateUserStatus = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await (0, auth_service_1.updateUserStatusService)(req.params.id);
+    (0, sendResponse_1.sendResponse)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Update User Status',
+        data: result,
+    });
+});
 exports.authControllers = {
     registerUser,
     loginUser,
@@ -90,5 +105,6 @@ exports.authControllers = {
     refreshToken,
     logoutUser,
     getTechnicianProfile,
-    updateAvatar
+    updateAvatar,
+    updateUserStatus
 };

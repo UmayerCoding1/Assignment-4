@@ -103,7 +103,9 @@ exports.BookingScalarFieldEnum = {
     workDuration: 'workDuration',
     status: 'status',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    acceptedAt: 'acceptedAt',
+    completedAt: 'completedAt'
 };
 exports.CategoryScalarFieldEnum = {
     id: 'id',

@@ -11,5 +11,6 @@ const router = express_1.default.Router();
 router.post("/bookings", (0, auth_1.auth)("CUSTOMER"), booking_controller_1.BookingControllers.createBooking);
 router.get("/bookings", (0, auth_1.auth)("CUSTOMER", "TECHNICIAN", "ADMIN"), booking_controller_1.BookingControllers.getMyBookings);
 router.get("/bookings/:id", (0, auth_1.auth)("CUSTOMER", "TECHNICIAN", "ADMIN"), booking_controller_1.BookingControllers.getBookingById);
+router.delete("/bookings/:id", (0, auth_1.auth)("CUSTOMER", 'ADMIN'), booking_controller_1.BookingControllers.deleteBooking);
 router.put('/booking/:id', (0, auth_1.auth)('TECHNICIAN'), booking_controller_1.BookingControllers.updateBookingStatus);
 exports.BookingRoutes = router;

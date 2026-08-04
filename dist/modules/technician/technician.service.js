@@ -8,11 +8,35 @@ const prisma_1 = require("../../lib/prisma");
 const AppError_1 = __importDefault(require("../../utils/AppError"));
 const getAllTechnicians = async (query) => {
     const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 10;
+    const limit = Number(query.limit) || 1;
     const skip = (page - 1) * limit;
+    console.log(query);
     const where = {};
     if (query.location) {
         where.location = { contains: query.location, mode: "insensitive" };
+    }
+    if (query.categoryFilter) {
+        where.categoryId = query.categoryFilter;
+    }
+    if (query.search) {
+        where.OR = [
+            {
+                user: {
+                    name: {
+                        contains: query.search,
+                        mode: "insensitive",
+                    },
+                },
+            },
+            {
+                category: {
+                    title: {
+                        contains: query.search,
+                        mode: "insensitive",
+                    },
+                },
+            },
+        ];
     }
     if (query.rating) {
         where.averageRating = { gte: parseFloat(query.rating) };

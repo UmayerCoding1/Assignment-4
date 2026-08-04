@@ -18,6 +18,7 @@ authRouter.post("/logout", (0, auth_1.auth)(enums_1.Role.ADMIN, enums_1.Role.CUS
 authRouter.post('/refresh-token', auth_controller_1.authControllers.refreshToken);
 authRouter.get("/technician/me", (0, auth_1.auth)(enums_1.Role.TECHNICIAN), auth_controller_1.authControllers.getTechnicianProfile);
 authRouter.patch('/update-avatar', (0, auth_1.auth)('ADMIN', 'CUSTOMER', 'TECHNICIAN'), auth_controller_1.authControllers.updateAvatar);
+authRouter.patch('/users/:id/status', (0, auth_1.auth)('ADMIN'), auth_controller_1.authControllers.updateUserStatus);
 authRouter.get('/state', async (req, res) => {
     try {
         // const userIds = await prisma.user.findMany({ where: { address: { not: null } }, select: { id: true } });

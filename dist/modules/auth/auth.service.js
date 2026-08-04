@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAvatarService = exports.getTechnicianProfileService = exports.refreshTokenService = exports.getMyProfileService = exports.loginUserService = exports.registerUserService = void 0;
+exports.updateUserStatusService = exports.updateAvatarService = exports.getTechnicianProfileService = exports.refreshTokenService = exports.getMyProfileService = exports.loginUserService = exports.registerUserService = void 0;
 const config_1 = __importDefault(require("../../config"));
 const client_1 = require("../../generated/prisma/client");
 const prisma_1 = require("../../lib/prisma");
@@ -241,3 +241,29 @@ const updateAvatarService = async (payload, userId) => {
     return result;
 };
 exports.updateAvatarService = updateAvatarService;
+const updateUserStatusService = async (userId) => {
+    const user = await prisma_1.prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+        select: {
+            status: true,
+        },
+    });
+    if (!user) {
+        throw new AppError_1.default(404, "User not found");
+    }
+    const newStatus = user.status === "ACTIVE"
+        ? "BLOCKED"
+        : "ACTIVE";
+    const updatedUser = await prisma_1.prisma.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+            status: newStatus,
+        },
+    });
+    return updatedUser;
+};
+exports.updateUserStatusService = updateUserStatusService;

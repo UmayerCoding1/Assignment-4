@@ -13,7 +13,7 @@ const globalErrorHandler_1 = require("./middlewares/globalErrorHandler");
 const category_route_1 = __importDefault(require("./modules/category/category.route"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: config_1.default.app_url,
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'https://fixit--now.vercel.app'],
     credentials: true
 }));
 console.log(config_1.default.app_url);

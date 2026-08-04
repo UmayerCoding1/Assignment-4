@@ -72,7 +72,7 @@ const getAllBookings = async (query: any) => {
       include: {
         customer: { select: { id: true, name: true, email: true } },
         technician: { select: { id: true, name: true, email: true } },
-        service: { select: { id: true, title: true, price: true } },
+        category: { select: { id: true, title: true, startingPrice: true } },
       },
       orderBy: { createdAt: "desc" },
     }),
