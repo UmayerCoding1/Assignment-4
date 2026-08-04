@@ -298,3 +298,35 @@ export const updateAvatarService = async (payload: { imageUrl: string }, userId:
 
     return result;
 }
+
+
+export const updateUserStatusService = async (userId: string) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+        select: {
+            status: true,
+        },
+    });
+
+    if (!user) {
+        throw new AppError(404, "User not found");
+    }
+
+    const newStatus =
+        user.status === "ACTIVE"
+            ? "BLOCKED"
+            : "ACTIVE";
+
+    const updatedUser = await prisma.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+            status: newStatus,
+        },
+    });
+
+    return updatedUser;
+};

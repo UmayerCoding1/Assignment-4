@@ -1,7 +1,7 @@
 import catchAsync from "../../utils/catchAsync";
 import { Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";
-import { getMyProfileService, getTechnicianProfileService, loginUserService, refreshTokenService, registerUserService, updateAvatarService } from "./auth.service";
+import { getMyProfileService, getTechnicianProfileService, loginUserService, refreshTokenService, registerUserService, updateAvatarService, updateUserStatusService } from "./auth.service";
 import httpStatus from "http-status";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
@@ -104,6 +104,17 @@ const updateAvatar = catchAsync(async (req: Request, res: Response) => {
         message: "Avatar updated successfully",
         data: result,
     });
+});
+
+const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
+    const result = await updateUserStatusService(req.params.id as string);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Update User Status',
+        data: result
+        ,
+    })
 })
 export const authControllers = {
     registerUser,
@@ -112,5 +123,6 @@ export const authControllers = {
     refreshToken,
     logoutUser,
     getTechnicianProfile,
-    updateAvatar
+    updateAvatar,
+    updateUserStatus
 }

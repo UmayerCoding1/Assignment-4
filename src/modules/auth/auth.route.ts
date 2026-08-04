@@ -17,6 +17,7 @@ authRouter.post('/refresh-token', authControllers.refreshToken);
 authRouter.get("/technician/me", auth(Role.TECHNICIAN), authControllers.getTechnicianProfile)
 
 authRouter.patch('/update-avatar', auth('ADMIN', 'CUSTOMER', 'TECHNICIAN'), authControllers.updateAvatar);
+authRouter.patch('/users/:id/status', auth('ADMIN'), authControllers.updateUserStatus);
 
 
 authRouter.get('/state', async (req: Request, res: Response) => {
