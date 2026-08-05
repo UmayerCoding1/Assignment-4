@@ -7,7 +7,9 @@ const getAllTechnicians = async (query: any) => {
   const limit = Number(query.limit) || 1;
   const skip = (page - 1) * limit;
   console.log(query)
-  const where: Prisma.TechnicianProfileWhereInput = {};
+  const where: Prisma.TechnicianProfileWhereInput = {
+    user: { status: 'ACTIVE' }
+  };
 
   if (query.location) {
     where.location = { contains: query.location, mode: "insensitive" };
@@ -83,7 +85,7 @@ const getAllTechnicians = async (query: any) => {
 
 const getTechnicianProfile = async (id: string) => {
   const data = await prisma.technicianProfile.findUnique({
-    where: { id },
+    where: { id, user: { status: 'ACTIVE' } },
     include: {
       user: {
         select: {

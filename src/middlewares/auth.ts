@@ -5,6 +5,7 @@ import { prisma } from "../lib/prisma";
 import { jwtUtils } from "../utils/jwt";
 import { Role } from "../generated/prisma/enums";
 import catchAsync from "../utils/catchAsync";
+import AppError from "../utils/AppError";
 
 
 
@@ -46,11 +47,13 @@ export const auth = (...requiredRoles: Role[]) => {
         // console.log('user', user)
 
         if (!user) {
-            throw new Error("User not found. Please log in again.");
+            throw new AppError(404, "User not found. Please log in again.");
         }
 
         if (user.status === "BLOCKED") {
-            throw new Error("Your account has been blocked. Please contact support.");
+            res.clearCookie("accessToken");
+            res.clearCookie("refreshToken");
+            throw new AppError(403, "Your account has been blocked. Please contact support.");
         }
 
         // console.log('user', user)

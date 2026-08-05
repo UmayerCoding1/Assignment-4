@@ -90,8 +90,35 @@ const getAllBookings = async (query: any) => {
   };
 };
 
+const getAllTechnicians = async () => {
+  const result = await prisma.technicianProfile.findMany({
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+          image: true,
+          services: true,
+        },
+      },
+      category: {
+        select: {
+          title: true,
+          id: true
+        }
+      }
+    },
+  });
+  if (!result) {
+    throw new AppError(404, "Technicians not found");
+  }
+
+  return result;
+}
+
 export const AdminServices = {
   getAllUsers,
   updateUserStatus,
   getAllBookings,
+  getAllTechnicians
 };

@@ -22,8 +22,12 @@ const DashboardServices = {
         const totalActiveTechnician = await prisma.technicianProfile.count({
             where: {
                 status: 'AVAILABLE',
+                user: {
+                    status: 'ACTIVE'
+                }
             }
         });
+        console.log('totalActiveTechnician', totalActiveTechnician)
         const totalBlockedUsers = await prisma.user.count({
             where: {
                 status: 'BLOCKED'

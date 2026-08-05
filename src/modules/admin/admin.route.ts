@@ -16,6 +16,8 @@ router.patch(
   AdminControllers.updateUserStatus
 );
 
+router.get('/admin/technicians', auth('ADMIN'), AdminControllers.getAllTechnician);
+
 router.get("/admin/bookings", auth("ADMIN"), AdminControllers.getAllBookings);
 
 router.get("/admin/categories", auth("ADMIN"), AdminControllers.getAllCategories);

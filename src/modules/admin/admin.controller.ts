@@ -64,10 +64,22 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllTechnician = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminServices.getAllTechnicians();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Technicians retrieved successfully",
+    data: result,
+  });
+
+})
+
 export const AdminControllers = {
   getAllUsers,
   updateUserStatus,
   getAllBookings,
   getAllCategories,
   createCategory,
+  getAllTechnician
 };

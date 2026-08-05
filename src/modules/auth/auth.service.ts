@@ -72,6 +72,11 @@ export const loginUserService = async (payload: TLoginPayload) => {
     if (!user) {
         throw new AppError(401, "Invalid email or password");
     }
+
+    if (user.status == "BLOCKED") {
+        throw new AppError(403, "Your account has been blocked. Please contact support for assistance.");
+    }
+
     const { password, ...userWithoutPassword } = user;
 
     const isPasswordMatched = await bcrypt.compare(
@@ -128,6 +133,8 @@ export const getMyProfileService = async (userId: string) => {
         where: { id: userId },
         omit: { password: true },
     });
+
+
 
     if (!result) {
         throw new AppError(404, "User not found!");
